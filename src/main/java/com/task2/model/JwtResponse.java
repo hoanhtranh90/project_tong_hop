@@ -13,4 +13,10 @@ public class JwtResponse  {
 	public String getToken() {
 		return this.jwttoken;
 	}
+
+	@Override
+	public String toString() {
+		return
+				jwttoken;
+	}
 }

@@ -5,13 +5,18 @@ import com.task2.model.User;
 import com.task2.model.UserDto;
 import com.task2.repository.RoleRepository;
 import com.task2.repository.UserRepository;
+import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.UnknownServiceException;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class UserService {
@@ -35,11 +40,16 @@ public class UserService {
 
     public User updateAccount(Long id, UserDto userDto){
         User user = userRepository.findUById(id);
-        user.setUsername(userDto.getUsername());
-        user.setPassword(bcryptEncoder.encode(userDto.getPassword()));
+        if(userRepository.findByUsername(userDto.getUsername()) != null) {
+            user.setUsername(userDto.getUsername());
+            user.setPassword(bcryptEncoder.encode(userDto.getPassword()));
 //        user.setRoles(userDto.); //chua co ham get role
 
-        return userRepository.save(user);
+            return userRepository.save(user);
+        }
+        else {
+            throw new UsernameNotFoundException("abc");
+        }
 
     }
 

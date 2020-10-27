@@ -15,6 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -61,7 +62,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 //			Role role = new Role();
 //			role.setRole(roleRepository.findAllById(Collections.singleton(2));
 			newUser.setRole(roleRepository.findRoleById( (long) 1	));
-
+			newUser.setCreatedBy("admin");
+			newUser.setCreatedDate(new Date());
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
 			return userRepository.save(newUser);
 		}
@@ -81,7 +83,10 @@ public class JwtUserDetailsService implements UserDetailsService {
 			long roleId_parent = roleRepository.findRoleByName(parent_role);
 			newUser.setRole(roleRepository.findRoleById(roleId_parent+1));
 			newUser.setPassword(bcryptEncoder.encode(user.getPassword()));
+			newUser.setCreatedBy(SecurityContextHolder.getContext().getAuthentication().getName());
+			newUser.setCreatedDate(new Date());
 			userRepository.save(newUser);
+
 
 			//add children for parent
 			User parent = userRepository.findByUsername(parent_name);

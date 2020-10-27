@@ -17,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,7 @@ public class AuthenticationController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -41,14 +43,23 @@ public class AuthenticationController {
 	//	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	@PostMapping("/authenticate")
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
-
+		System.out.println(authenticationRequest.getPassword());
+		System.out.println(authenticationRequest.getUsername());
 		authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String token = jwtTokenUtil.generateToken(userDetails);
+		HashMap object = new HashMap();
+//		object.put("token", String.valueOf(new JwtResponse(token)));
+//		object.put("username", userDetails.getUsername());
+//		object.put("Authorization", userDetails.getAuthorities().toString());
 
-		return ResponseEntity.ok(new JwtResponse(token));
+//		return ResponseEntity.ok(new JwtResponse(token));
+		User user = userRepository.findByUsername(userDetails.getUsername());
+		object.put("user",user);
+		object.put("token",token);
+		return ResponseEntity.ok(object);
 	}
 
 	@PostMapping("/register")

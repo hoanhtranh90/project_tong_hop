@@ -47,12 +47,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 				System.out.println("JWT không hợp lệ");
 			}
 		} else {
-			logger.warn("khong co request");
+			logger.warn("khong co token");
 		}
 
 		//Xac thuc token khi nhan duoc ma
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-//SecurityContextHolder.getContext().getAuthentication():  lay quyen user
+			//cap quyen user
 			UserDetails userDetails = this.jwtUserDetailsService.loadUserByUsername(username);
 			
 			if (jwtTokenUtil.validateToken(jwtToken, userDetails)) {
@@ -69,5 +69,4 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 		//neu hop le thi chuyen den filter tiep theo
 		chain.doFilter(request, response);
 	}
-
 }
