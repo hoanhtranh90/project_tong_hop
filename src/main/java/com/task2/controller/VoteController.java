@@ -58,16 +58,9 @@ public class VoteController {
         //
         return new ResponseEntity("Update thanh cong", HttpStatus.OK);
     }
-//    @PutMapping("/authenticate")
-//    public ResponseEntity<?> UpdateAcc(@RequestParam(value = "id", required = true) Long user_id,
-//                                       @RequestBody UserDto userDto) {
-//
-//        userService.updateAccount(user_id, userDto);
-//
-//        return new ResponseEntity("Update thanh cong", HttpStatus.OK);
-//    }
 
-    //******************answer
+
+    //******************answer**************//
     @PostMapping("/{id}")
     public ResponseEntity<?> voteAnswer(@PathVariable("id") Long vote_id,
                                         @RequestParam("answer") Long answer_id
